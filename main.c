@@ -20,4 +20,15 @@ int main() {
   }
   closedir(d);
 
+  printf("Regular files:\n");
+  d = opendir(".");
+  entry = readdir(d);
+  while (entry) {
+    if (entry -> d_type == 8) printf("\t%s\n", entry -> d_name);
+    entry = readdir(d);
+  }
+  closedir(d);
+
+  return 0;
+
 }
