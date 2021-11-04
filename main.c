@@ -1,14 +1,27 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <stdio.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+
+int main(int argc, char *argv[]) {
+  char directory[500];
+  DIR *d;
+
+  if (argc > 2) printf("Too many arguements\n");
+  else if (argc > 1) strcpy(directory, argv[1]);
+  else {
+    printf("Enter directory name: \n");
+    return 0;
+  }
 
 
-int main() {
-  DIR *d = opendir(".");
-  printf("Statistics for directory: .\n");
+  d = opendir(directory);
+  printf("Statistics for directory: %s\n", argv[1]);
 
   struct stat s;
-  stat(".", &s);
+  stat(directory, &s);
   printf("Total Directory Size: %lld\n", s.st_size);
 
   printf("Directories:\n");
@@ -21,7 +34,7 @@ int main() {
   closedir(d);
 
   printf("Regular files:\n");
-  d = opendir(".");
+  d = opendir(directory);
   entry = readdir(d);
   while (entry) {
     stat(entry -> d_name, &s);
