@@ -8,6 +8,7 @@
 int main(int argc, char *argv[]) {
   char directory[500];
   DIR *d;
+  int dir_size = 0;
 
   if (argc > 2) printf("Too many arguements\n");
   else if (argc > 1) strcpy(directory, argv[1]);
@@ -22,7 +23,6 @@ int main(int argc, char *argv[]) {
 
   struct stat s;
   stat(directory, &s);
-  printf("Total Directory Size: %lld\n", s.st_size);
 
   printf("Directories:\n");
   struct dirent *entry;
@@ -37,11 +37,16 @@ int main(int argc, char *argv[]) {
   d = opendir(directory);
   entry = readdir(d);
   while (entry) {
-    stat(entry -> d_name, &s);
-    if (entry -> d_type == 8) printf("\t%s\t%lld\n", entry -> d_name, s.st_size);
+    if (entry -> d_type == 8) {
+      stat(entry -> d_name, &s);
+      printf("\t%s\t%lld\n", entry -> d_name, s.st_size);
+      dir_size += s.st_size;
+    }
     entry = readdir(d);
   }
   closedir(d);
+
+  printf("Total Directory Size: %d\n", dir_size);
 
   return 0;
 
